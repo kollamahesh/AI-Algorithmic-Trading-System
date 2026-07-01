@@ -23,29 +23,9 @@ profits = run_backtest(df)
 
 total_profit = sum(profits)
 
-print("\n===================")
-print("BACKTEST RESULTS")
-print("===================")
-
-print("Total Trades :", len(profits))
-print("Total Profit :", round(total_profit, 2))
-print("Final Capital:", round(100000 + total_profit, 2))
-
-from risk.risk_manager import calculate_position_size
-
-quantity = calculate_position_size(
-    capital=100000,
-    risk_percent=1,
-    entry_price=1500,
-    stop_loss_price=1470
-)
-
-total_profit = sum(profits)
-
 print("\n===================================")
 print("BACKTEST RESULTS")
 print("===================================")
-
 print(f"Total Trades : {len(profits)}")
 print(f"Total Profit : ₹{total_profit:.2f}")
 print(f"Final Capital: ₹{100000 + total_profit:.2f}")
