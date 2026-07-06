@@ -30,3 +30,40 @@ print(f"Total Trades : {len(profits)}")
 print(f"Total Profit : ₹{total_profit:.2f}")
 print(f"Final Capital: ₹{100000 + total_profit:.2f}")
 
+
+
+
+from execution.slippage import (
+    apply_buy_slippage,
+    apply_sell_slippage,
+    calculate_slippage
+)
+
+buy = 1500
+
+actual_buy = apply_buy_slippage(buy)
+
+sell = 1560
+
+actual_sell = apply_sell_slippage(sell)
+
+print("\nSLIPPAGE TEST")
+print("------------------------")
+
+print("Expected Buy :", buy)
+print("Actual Buy   :", actual_buy)
+
+print("Expected Sell:", sell)
+print("Actual Sell  :", actual_sell)
+
+print()
+
+print(
+    "Buy Slippage :",
+    calculate_slippage(buy, actual_buy)
+)
+
+print(
+    "Sell Slippage:",
+    calculate_slippage(sell, actual_sell)
+)
