@@ -29,3 +29,4 @@ print("===================================")
 print(f"Total Trades : {len(profits)}")
 print(f"Total Profit : ₹{total_profit:.2f}")
 print(f"Final Capital: ₹{100000 + total_profit:.2f}")
+

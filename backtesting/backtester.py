@@ -5,11 +5,15 @@ from risk.stop_loss import (
     check_stop_loss
 )
 
+from costs.brokerage import calculate_brokerage
+
 
 def run_backtest(df):
 
+    # Initial Capital
     capital = 100000
 
+    # Trade Variables
     position = False
     entry_price = 0
     quantity = 0
@@ -58,33 +62,55 @@ def run_backtest(df):
 
             exit_price = stop_loss_price
 
-            trade_profit = (exit_price - entry_price) * quantity
+            gross_profit = (exit_price - entry_price) * quantity
+
+            brokerage = calculate_brokerage(
+                quantity,
+                entry_price,
+                exit_price
+            )
+
+            trade_profit = gross_profit - brokerage
 
             capital += trade_profit
+
             profits.append(trade_profit)
 
             print("\nSTOP LOSS HIT!")
             print(f"Exit Price   : ₹{exit_price:.2f}")
-            print(f"P&L          : ₹{trade_profit:.2f}")
+            print(f"Gross Profit : ₹{gross_profit:.2f}")
+            print(f"Brokerage    : ₹{brokerage:.2f}")
+            print(f"Net Profit   : ₹{trade_profit:.2f}")
             print(f"Capital      : ₹{capital:.2f}")
 
             position = False
 
         # ==========================
-        # TAKE PROFIT
+        # TARGET HIT
         # ==========================
         elif position and close_price >= target_price:
 
             exit_price = target_price
 
-            trade_profit = (exit_price - entry_price) * quantity
+            gross_profit = (exit_price - entry_price) * quantity
+
+            brokerage = calculate_brokerage(
+                quantity,
+                entry_price,
+                exit_price
+            )
+
+            trade_profit = gross_profit - brokerage
 
             capital += trade_profit
+
             profits.append(trade_profit)
 
             print("\nTARGET HIT!")
             print(f"Exit Price   : ₹{exit_price:.2f}")
-            print(f"P&L          : ₹{trade_profit:.2f}")
+            print(f"Gross Profit : ₹{gross_profit:.2f}")
+            print(f"Brokerage    : ₹{brokerage:.2f}")
+            print(f"Net Profit   : ₹{trade_profit:.2f}")
             print(f"Capital      : ₹{capital:.2f}")
 
             position = False
@@ -96,14 +122,25 @@ def run_backtest(df):
 
             exit_price = close_price
 
-            trade_profit = (exit_price - entry_price) * quantity
+            gross_profit = (exit_price - entry_price) * quantity
+
+            brokerage = calculate_brokerage(
+                quantity,
+                entry_price,
+                exit_price
+            )
+
+            trade_profit = gross_profit - brokerage
 
             capital += trade_profit
+
             profits.append(trade_profit)
 
             print("\nSELL SIGNAL")
             print(f"Exit Price   : ₹{exit_price:.2f}")
-            print(f"P&L          : ₹{trade_profit:.2f}")
+            print(f"Gross Profit : ₹{gross_profit:.2f}")
+            print(f"Brokerage    : ₹{brokerage:.2f}")
+            print(f"Net Profit   : ₹{trade_profit:.2f}")
             print(f"Capital      : ₹{capital:.2f}")
 
             position = False
