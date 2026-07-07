@@ -4,17 +4,18 @@ brokerage.py
 Simple brokerage calculator for backtesting.
 """
 
+import config
+
 
 def calculate_brokerage(quantity, buy_price, sell_price):
-    """
-    Calculates brokerage using a simplified model.
 
-    Assumption:
-    Flat 0.1% of turnover.
-    """
+    turnover = (
+        buy_price + sell_price
+    ) * quantity
 
-    turnover = (buy_price + sell_price) * quantity
-
-    brokerage = turnover * 0.001
+    brokerage = (
+        turnover *
+        config.BROKERAGE_PERCENT / 100
+    )
 
     return round(brokerage, 2)
