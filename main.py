@@ -22,9 +22,13 @@ def main():
     print(f"Slippage     : {config.SLIPPAGE_PERCENT}%")
     print(f"Brokerage    : {config.BROKERAGE_PERCENT}%")
     print(f"Capital      : ₹{config.INITIAL_CAPITAL}")
+
     print("===================================\n")
 
+    # =====================================
     # Download Market Data
+    # =====================================
+
     df = yf.download(
         config.SYMBOL,
         start=config.START_DATE,
@@ -36,20 +40,36 @@ def main():
     if hasattr(df.columns, "nlevels") and df.columns.nlevels > 1:
         df.columns = df.columns.get_level_values(0)
 
+    # =====================================
     # Generate Trading Signals
+    # =====================================
+
     df = generate_signals(df)
 
+    # =====================================
     # Run Backtest
-    profits = run_backtest(df)
+    # =====================================
 
-    total_profit = sum(profits)
+    results = run_backtest(
+        df,
+        verbose=True
+    )
+
+    # =====================================
+    # Final Results
+    # =====================================
 
     print("\n===================================")
     print("BACKTEST RESULTS")
     print("===================================")
-    print(f"Total Trades : {len(profits)}")
-    print(f"Total Profit : ₹{total_profit:.2f}")
-    print(f"Final Capital: ₹{config.INITIAL_CAPITAL + total_profit:.2f}")
+
+    print(f"Total Trades    : {results['total_trades']}")
+    print(f"Winning Trades  : {results['winning_trades']}")
+    print(f"Losing Trades   : {results['losing_trades']}")
+    print(f"Win Rate        : {results['win_rate']}%")
+    print(f"Total Profit    : ₹{results['total_profit']:.2f}")
+    print(f"Final Capital   : ₹{results['final_capital']:.2f}")
+
     print("===================================")
 
 

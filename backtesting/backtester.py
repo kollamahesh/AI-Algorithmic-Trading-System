@@ -1,3 +1,5 @@
+import config
+
 from risk.risk_manager import calculate_position_size
 
 from risk.stop_loss import (
@@ -14,14 +16,15 @@ from execution.slippage import (
 )
 
 
-def run_backtest(df):
+def run_backtest(df, verbose=True):
 
-    capital = 100000
+    capital = config.INITIAL_CAPITAL
 
     position = False
 
     entry_price = 0
     quantity = 0
+
     stop_loss_price = 0
     target_price = 0
 
@@ -32,47 +35,60 @@ def run_backtest(df):
         signal = int(row["Signal"])
         close_price = float(row["Close"])
 
-        # ==================================================
+        # =====================================
         # BUY
-        # ==================================================
+        # =====================================
         if signal == 1 and not position:
 
             expected_entry = close_price
 
-            # Apply Buy Slippage
-            entry_price = apply_buy_slippage(expected_entry)
+            entry_price = apply_buy_slippage(
+                expected_entry
+            )
 
-            stop_loss_price = calculate_stop_loss(entry_price)
-            target_price = calculate_target(entry_price)
+            stop_loss_price = calculate_stop_loss(
+                entry_price
+            )
+
+            target_price = calculate_target(
+                entry_price
+            )
 
             quantity = calculate_position_size(
                 capital=capital,
-                risk_percent=1,
+                risk_percent=config.RISK_PERCENT,
                 entry_price=entry_price,
                 stop_loss_price=stop_loss_price
             )
 
             position = True
 
-            print("\n===================================")
-            print("NEW TRADE")
-            print("===================================")
+            if verbose:
 
-            print(f"Capital        : ₹{capital:.2f}")
-            print(f"Expected Buy   : ₹{expected_entry:.2f}")
-            print(f"Actual Buy     : ₹{entry_price:.2f}")
-            print(f"Stop Loss      : ₹{stop_loss_price:.2f}")
-            print(f"Target Price   : ₹{target_price:.2f}")
-            print(f"Quantity       : {quantity}")
+                print("\n===================================")
+                print("NEW TRADE")
+                print("===================================")
 
-        # ==================================================
+                print(f"Capital        : ₹{capital:.2f}")
+                print(f"Expected Buy   : ₹{expected_entry:.2f}")
+                print(f"Actual Buy     : ₹{entry_price:.2f}")
+                print(f"Stop Loss      : ₹{stop_loss_price:.2f}")
+                print(f"Target Price   : ₹{target_price:.2f}")
+                print(f"Quantity       : {quantity}")
+
+        # =====================================
         # STOP LOSS
-        # ==================================================
-        elif position and check_stop_loss(close_price, stop_loss_price):
+        # =====================================
+        elif position and check_stop_loss(
+            close_price,
+            stop_loss_price
+        ):
 
             expected_exit = stop_loss_price
 
-            exit_price = apply_sell_slippage(expected_exit)
+            exit_price = apply_sell_slippage(
+                expected_exit
+            )
 
             gross_profit = (
                 exit_price - entry_price
@@ -84,31 +100,35 @@ def run_backtest(df):
                 exit_price
             )
 
-            trade_profit = gross_profit - brokerage
+            net_profit = gross_profit - brokerage
 
-            capital += trade_profit
+            capital += net_profit
 
-            profits.append(trade_profit)
+            profits.append(net_profit)
 
-            print("\nSTOP LOSS HIT!")
+            if verbose:
 
-            print(f"Expected Exit : ₹{expected_exit:.2f}")
-            print(f"Actual Exit   : ₹{exit_price:.2f}")
-            print(f"Gross Profit  : ₹{gross_profit:.2f}")
-            print(f"Brokerage     : ₹{brokerage:.2f}")
-            print(f"Net Profit    : ₹{trade_profit:.2f}")
-            print(f"Capital       : ₹{capital:.2f}")
+                print("\nSTOP LOSS HIT!")
+
+                print(f"Expected Exit : ₹{expected_exit:.2f}")
+                print(f"Actual Exit   : ₹{exit_price:.2f}")
+                print(f"Gross Profit  : ₹{gross_profit:.2f}")
+                print(f"Brokerage     : ₹{brokerage:.2f}")
+                print(f"Net Profit    : ₹{net_profit:.2f}")
+                print(f"Capital       : ₹{capital:.2f}")
 
             position = False
 
-        # ==================================================
+        # =====================================
         # TARGET HIT
-        # ==================================================
+        # =====================================
         elif position and close_price >= target_price:
 
             expected_exit = target_price
 
-            exit_price = apply_sell_slippage(expected_exit)
+            exit_price = apply_sell_slippage(
+                expected_exit
+            )
 
             gross_profit = (
                 exit_price - entry_price
@@ -120,31 +140,35 @@ def run_backtest(df):
                 exit_price
             )
 
-            trade_profit = gross_profit - brokerage
+            net_profit = gross_profit - brokerage
 
-            capital += trade_profit
+            capital += net_profit
 
-            profits.append(trade_profit)
+            profits.append(net_profit)
 
-            print("\nTARGET HIT!")
+            if verbose:
 
-            print(f"Expected Exit : ₹{expected_exit:.2f}")
-            print(f"Actual Exit   : ₹{exit_price:.2f}")
-            print(f"Gross Profit  : ₹{gross_profit:.2f}")
-            print(f"Brokerage     : ₹{brokerage:.2f}")
-            print(f"Net Profit    : ₹{trade_profit:.2f}")
-            print(f"Capital       : ₹{capital:.2f}")
+                print("\nTARGET HIT!")
+
+                print(f"Expected Exit : ₹{expected_exit:.2f}")
+                print(f"Actual Exit   : ₹{exit_price:.2f}")
+                print(f"Gross Profit  : ₹{gross_profit:.2f}")
+                print(f"Brokerage     : ₹{brokerage:.2f}")
+                print(f"Net Profit    : ₹{net_profit:.2f}")
+                print(f"Capital       : ₹{capital:.2f}")
 
             position = False
 
-        # ==================================================
+        # =====================================
         # SELL SIGNAL
-        # ==================================================
+        # =====================================
         elif signal == -1 and position:
 
             expected_exit = close_price
 
-            exit_price = apply_sell_slippage(expected_exit)
+            exit_price = apply_sell_slippage(
+                expected_exit
+            )
 
             gross_profit = (
                 exit_price - entry_price
@@ -156,21 +180,64 @@ def run_backtest(df):
                 exit_price
             )
 
-            trade_profit = gross_profit - brokerage
+            net_profit = gross_profit - brokerage
 
-            capital += trade_profit
+            capital += net_profit
 
-            profits.append(trade_profit)
+            profits.append(net_profit)
 
-            print("\nSELL SIGNAL")
+            if verbose:
 
-            print(f"Expected Exit : ₹{expected_exit:.2f}")
-            print(f"Actual Exit   : ₹{exit_price:.2f}")
-            print(f"Gross Profit  : ₹{gross_profit:.2f}")
-            print(f"Brokerage     : ₹{brokerage:.2f}")
-            print(f"Net Profit    : ₹{trade_profit:.2f}")
-            print(f"Capital       : ₹{capital:.2f}")
+                print("\nSELL SIGNAL!")
+
+                print(f"Expected Exit : ₹{expected_exit:.2f}")
+                print(f"Actual Exit   : ₹{exit_price:.2f}")
+                print(f"Gross Profit  : ₹{gross_profit:.2f}")
+                print(f"Brokerage     : ₹{brokerage:.2f}")
+                print(f"Net Profit    : ₹{net_profit:.2f}")
+                print(f"Capital       : ₹{capital:.2f}")
 
             position = False
 
-    return profits
+    # =====================================
+    # PERFORMANCE SUMMARY
+    # =====================================
+
+    total_profit = sum(profits)
+
+    total_trades = len(profits)
+
+    winning_trades = len(
+        [p for p in profits if p > 0]
+    )
+
+    losing_trades = len(
+        [p for p in profits if p <= 0]
+    )
+
+    if total_trades > 0:
+        win_rate = (
+            winning_trades / total_trades
+        ) * 100
+    else:
+        win_rate = 0
+
+    results = {
+
+        "profits": profits,
+
+        "total_profit": total_profit,
+
+        "final_capital": capital,
+
+        "total_trades": total_trades,
+
+        "winning_trades": winning_trades,
+
+        "losing_trades": losing_trades,
+
+        "win_rate": round(win_rate, 2)
+
+    }
+
+    return results
