@@ -15,6 +15,8 @@ from execution.slippage import (
     apply_sell_slippage
 )
 
+from journal.trade_journal import add_trade
+
 
 def run_backtest(df, verbose=True):
 
@@ -38,6 +40,7 @@ def run_backtest(df, verbose=True):
         # =====================================
         # BUY
         # =====================================
+
         if signal == 1 and not position:
 
             expected_entry = close_price
@@ -79,6 +82,7 @@ def run_backtest(df, verbose=True):
         # =====================================
         # STOP LOSS
         # =====================================
+
         elif position and check_stop_loss(
             close_price,
             stop_loss_price
@@ -106,6 +110,14 @@ def run_backtest(df, verbose=True):
 
             profits.append(net_profit)
 
+            add_trade(
+                entry_price=entry_price,
+                exit_price=exit_price,
+                quantity=quantity,
+                exit_reason="Stop Loss",
+                profit=net_profit
+            )
+
             if verbose:
 
                 print("\nSTOP LOSS HIT!")
@@ -118,10 +130,10 @@ def run_backtest(df, verbose=True):
                 print(f"Capital       : ₹{capital:.2f}")
 
             position = False
-
-        # =====================================
+                    # =====================================
         # TARGET HIT
         # =====================================
+
         elif position and close_price >= target_price:
 
             expected_exit = target_price
@@ -146,6 +158,14 @@ def run_backtest(df, verbose=True):
 
             profits.append(net_profit)
 
+            add_trade(
+                entry_price=entry_price,
+                exit_price=exit_price,
+                quantity=quantity,
+                exit_reason="Target",
+                profit=net_profit
+            )
+
             if verbose:
 
                 print("\nTARGET HIT!")
@@ -162,6 +182,7 @@ def run_backtest(df, verbose=True):
         # =====================================
         # SELL SIGNAL
         # =====================================
+
         elif signal == -1 and position:
 
             expected_exit = close_price
@@ -185,6 +206,14 @@ def run_backtest(df, verbose=True):
             capital += net_profit
 
             profits.append(net_profit)
+
+            add_trade(
+                entry_price=entry_price,
+                exit_price=exit_price,
+                quantity=quantity,
+                exit_reason="Sell Signal",
+                profit=net_profit
+            )
 
             if verbose:
 

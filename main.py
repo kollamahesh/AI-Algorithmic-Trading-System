@@ -1,8 +1,15 @@
 import yfinance as yf
 import config
-
+from journal.trade_journal import get_trade_history
 from strategies.ema_rsi_strategy import generate_signals
 from backtesting.backtester import run_backtest
+
+from analytics.performance import (
+    calculate_win_rate,
+    calculate_average_win,
+    calculate_average_loss,
+    calculate_profit_factor
+)
 
 
 def main():
@@ -41,7 +48,7 @@ def main():
         df.columns = df.columns.get_level_values(0)
 
     # =====================================
-    # Generate Trading Signals
+    # Generate Signals
     # =====================================
 
     df = generate_signals(df)
@@ -56,7 +63,7 @@ def main():
     )
 
     # =====================================
-    # Final Results
+    # Backtest Results
     # =====================================
 
     print("\n===================================")
@@ -70,8 +77,52 @@ def main():
     print(f"Total Profit    : ₹{results['total_profit']:.2f}")
     print(f"Final Capital   : ₹{results['final_capital']:.2f}")
 
+    # =====================================
+    # Performance Analytics
+    # =====================================
+
+    profits = results["profits"]
+
+    print("\n===================================")
+    print("PERFORMANCE METRICS")
+    print("===================================")
+
+    print(f"Win Rate        : {calculate_win_rate(profits)}%")
+    print(f"Average Win     : ₹{calculate_average_win(profits):.2f}")
+    print(f"Average Loss    : ₹{calculate_average_loss(profits):.2f}")
+    print(f"Profit Factor   : {calculate_profit_factor(profits)}")
+
     print("===================================")
 
 
 if __name__ == "__main__":
     main()
+    
+# =====================================
+# Trade Journal
+# =====================================
+
+history = get_trade_history()
+
+print("\n===================================")
+print("TRADE JOURNAL")
+print("===================================")
+
+if len(history) == 0:
+
+    print("No trades recorded.")
+
+else:
+
+    for i, trade in enumerate(history, start=1):
+
+        print(f"\nTrade {i}")
+        print("-" * 25)
+
+        print(f"Entry Price : ₹{trade['Entry Price']}")
+        print(f"Exit Price  : ₹{trade['Exit Price']}")
+        print(f"Quantity    : {trade['Quantity']}")
+        print(f"Exit Reason : {trade['Exit Reason']}")
+        print(f"Profit      : ₹{trade['Profit']}")
+
+print("===================================")
