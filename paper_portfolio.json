@@ -1,0 +1,56 @@
+{
+    "capital": 3176.1999999999825,
+    "open_positions": [
+        {
+            "Symbol": "ADANIENT.NS",
+            "Entry": 3157.3,
+            "Stop": 3024.18,
+            "Target": 3423.54,
+            "Quantity": 7,
+            "Investment": 22101.100000000002,
+            "Entry Time": "2026-07-11 09:48:23.338099",
+            "Status": "OPEN"
+        },
+        {
+            "Symbol": "ICICIBANK.NS",
+            "Entry": 1401.2,
+            "Stop": 1363.14,
+            "Target": 1477.31,
+            "Quantity": 26,
+            "Investment": 36431.200000000004,
+            "Entry Time": "2026-07-11 22:52:12.046094",
+            "Status": "OPEN"
+        },
+        {
+            "Symbol": "APOLLOHOSP.NS",
+            "Entry": 8841.0,
+            "Stop": 8623.57,
+            "Target": 9275.85,
+            "Quantity": 4,
+            "Investment": 35364.0,
+            "Entry Time": "2026-07-11 23:32:32",
+            "Status": "OPEN"
+        },
+        {
+            "Symbol": "BAJFINANCE.NS",
+            "Entry": 1020.5,
+            "Stop": 983.56,
+            "Target": 1094.39,
+            "Quantity": 27,
+            "Investment": 27553.5,
+            "Entry Time": "2026-07-11 23:33:45",
+            "Status": "OPEN"
+        },
+        {
+            "Symbol": "MARUTI.NS",
+            "Entry": 13854.0,
+            "Stop": 13348.17,
+            "Target": 14865.66,
+            "Quantity": 1,
+            "Investment": 13854.0,
+            "Entry Time": "2026-07-11 23:35:00",
+            "Status": "OPEN"
+        }
+    ],
+    "closed_positions": []
+}

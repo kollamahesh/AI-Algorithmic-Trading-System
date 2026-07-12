@@ -114,8 +114,12 @@ def run_backtest(df, verbose=True):
                 entry_price=entry_price,
                 exit_price=exit_price,
                 quantity=quantity,
-                exit_reason="Stop Loss",
-                profit=net_profit
+                stop_loss=stop_loss_price,
+                target=target_price,
+                gross_profit=gross_profit,
+                brokerage=brokerage,
+                net_profit=net_profit,
+                exit_reason="Stop Loss"
             )
 
             if verbose:
@@ -131,6 +135,10 @@ def run_backtest(df, verbose=True):
 
             position = False
                     # =====================================
+        # TARGET HIT
+        # =====================================
+
+                # =====================================
         # TARGET HIT
         # =====================================
 
@@ -162,8 +170,12 @@ def run_backtest(df, verbose=True):
                 entry_price=entry_price,
                 exit_price=exit_price,
                 quantity=quantity,
-                exit_reason="Target",
-                profit=net_profit
+                stop_loss=stop_loss_price,
+                target=target_price,
+                gross_profit=gross_profit,
+                brokerage=brokerage,
+                net_profit=net_profit,
+                exit_reason="Target"
             )
 
             if verbose:
@@ -211,8 +223,12 @@ def run_backtest(df, verbose=True):
                 entry_price=entry_price,
                 exit_price=exit_price,
                 quantity=quantity,
-                exit_reason="Sell Signal",
-                profit=net_profit
+                stop_loss=stop_loss_price,
+                target=target_price,
+                gross_profit=gross_profit,
+                brokerage=brokerage,
+                net_profit=net_profit,
+                exit_reason="Sell Signal"
             )
 
             if verbose:

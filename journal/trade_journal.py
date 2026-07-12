@@ -1,10 +1,14 @@
 """
 trade_journal.py
 
-Stores completed trades.
+Trade Journal Module
 """
 
-# List that stores all completed trades
+import datetime
+import pandas as pd
+import config
+
+# Stores all completed trades
 trade_history = []
 
 
@@ -12,14 +16,22 @@ def add_trade(
     entry_price,
     exit_price,
     quantity,
-    exit_reason,
-    profit
+    stop_loss,
+    target,
+    gross_profit,
+    brokerage,
+    net_profit,
+    exit_reason
 ):
     """
-    Store one completed trade.
+    Store one completed trade
     """
 
     trade = {
+
+        "Date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+
+        "Symbol": config.SYMBOL,
 
         "Entry Price": round(entry_price, 2),
 
@@ -27,9 +39,17 @@ def add_trade(
 
         "Quantity": quantity,
 
-        "Exit Reason": exit_reason,
+        "Stop Loss": round(stop_loss, 2),
 
-        "Profit": round(profit, 2)
+        "Target": round(target, 2),
+
+        "Gross Profit": round(gross_profit, 2),
+
+        "Brokerage": round(brokerage, 2),
+
+        "Net Profit": round(net_profit, 2),
+
+        "Exit Reason": exit_reason
 
     }
 
@@ -38,7 +58,25 @@ def add_trade(
 
 def get_trade_history():
     """
-    Return all completed trades.
+    Return all completed trades
     """
 
     return trade_history
+
+
+def save_trade_history(filename="trade_history.csv"):
+    """
+    Save trade history to CSV
+    """
+
+    if len(trade_history) == 0:
+        return
+
+    df = pd.DataFrame(trade_history)
+
+    df.to_csv(
+        filename,
+        index=False
+    )
+
+    print(f"\nTrade history saved to {filename}")
