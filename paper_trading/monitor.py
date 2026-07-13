@@ -1,90 +1,60 @@
 """
 paper_trading/monitor.py
+
+Automatic Position Monitor
 """
 
-from datetime import datetime
-
-from paper_trading.portfolio import (
-    open_positions,
-    closed_positions,
-    get_capital,
-    update_capital
-)
+from kite_api.live_price import get_live_price
+from paper_trading.execution import close_paper_trade
+from paper_trading.portfolio import get_open_positions
 
 
-def check_position(symbol, current_price):
+def monitor_positions():
+    """
+    Monitor all open positions.
 
-    for position in open_positions[:]:
+    If target or stop loss is hit,
+    automatically closes the trade.
+    """
 
-        if position["Symbol"] != symbol:
+    messages = []
+
+    positions = get_open_positions().copy()
+
+    for position in positions:
+
+        symbol = position["Symbol"]
+
+        try:
+            live_price = get_live_price(symbol)
+
+        except Exception:
             continue
 
-        # -------------------------
-        # TARGET HIT
-        # -------------------------
+        # ----------------------------
+        # Target Hit
+        # ----------------------------
 
-        if current_price >= position["Target"]:
+        if live_price >= position["Target"]:
 
-            profit = (
-                current_price - position["Entry"]
-            ) * position["Quantity"]
+            success, _ = close_paper_trade(symbol)
 
-            capital = get_capital()
+            if success:
+                messages.append(
+                    f"🎯 Target Hit : {symbol}"
+                )
 
-            capital += (
-                position["Investment"] + profit
-            )
+        # ----------------------------
+        # Stop Loss Hit
+        # ----------------------------
 
-            update_capital(capital)
+        elif live_price <= position["Stop"]:
 
-            position["Exit"] = current_price
-            position["Exit Time"] = datetime.now()
-            position["Profit"] = round(profit, 2)
-            position["Status"] = "TARGET HIT"
+            success, _ = close_paper_trade(symbol)
 
-            open_positions.remove(position)
-            closed_positions.append(position)
+            if success:
+                messages.append(
+                    f"🛑 Stop Loss Hit : {symbol}"
+                )
 
-            print("\n================================")
-            print("TARGET HIT")
-            print("================================")
-            print(f"Symbol : {symbol}")
-            print(f"Exit   : ₹{current_price:.2f}")
-            print(f"Profit : ₹{profit:.2f}")
-            print(f"Capital: ₹{capital:.2f}")
-            print("================================")
-
-        # -------------------------
-        # STOP LOSS
-        # -------------------------
-
-        elif current_price <= position["Stop"]:
-
-            loss = (
-                position["Entry"] - current_price
-            ) * position["Quantity"]
-
-            capital = get_capital()
-
-            capital += (
-                position["Investment"] - loss
-            )
-
-            update_capital(capital)
-
-            position["Exit"] = current_price
-            position["Exit Time"] = datetime.now()
-            position["Profit"] = round(-loss, 2)
-            position["Status"] = "STOP LOSS"
-
-            open_positions.remove(position)
-            closed_positions.append(position)
-
-            print("\n================================")
-            print("STOP LOSS HIT")
-            print("================================")
-            print(f"Symbol : {symbol}")
-            print(f"Exit   : ₹{current_price:.2f}")
-            print(f"Loss   : ₹{loss:.2f}")
-            print(f"Capital: ₹{capital:.2f}")
-            print("================================")
+    return messages

@@ -1,28 +1,35 @@
 """
-slippage.py
+execution/slippage.py
 
-Functions for simulating execution slippage.
+Handles buy and sell slippage.
 """
 
-
-import config
+from config.settings import SLIPPAGE_PERCENT
 
 
 def apply_buy_slippage(price):
-    actual_price = price * (
-        1 + config.SLIPPAGE_PERCENT / 100
-    )
+    """
+    Apply slippage when buying.
 
-    return round(actual_price, 2)
+    Example:
+    Price = 100
+    Slippage = 0.10%
+
+    Buy Price = 100.10
+    """
+
+    return price * (1 + SLIPPAGE_PERCENT / 100)
 
 
 def apply_sell_slippage(price):
-    actual_price = price * (
-        1 - config.SLIPPAGE_PERCENT / 100
-    )
+    """
+    Apply slippage when selling.
 
-    return round(actual_price, 2)
+    Example:
+    Price = 100
+    Slippage = 0.10%
 
+    Sell Price = 99.90
+    """
 
-def calculate_slippage(expected_price, actual_price):
-    return round(actual_price - expected_price, 2)
+    return price * (1 - SLIPPAGE_PERCENT / 100)

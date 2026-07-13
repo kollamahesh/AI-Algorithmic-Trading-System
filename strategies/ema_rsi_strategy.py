@@ -14,7 +14,13 @@ from config.settings import (
 )
 
 
-def generate_signals(df):
+def generate_signals(
+    df,
+    ema_fast=EMA_FAST,
+    ema_slow=EMA_SLOW,
+    rsi_buy=RSI_BUY,
+    rsi_sell=RSI_SELL
+):
 
     # ----------------------------------
     # Fix MultiIndex columns
@@ -34,12 +40,12 @@ def generate_signals(df):
     # ----------------------------------
 
     df["EMA_FAST"] = close.ewm(
-        span=EMA_FAST,
+        span=ema_fast,
         adjust=False
     ).mean()
 
     df["EMA_SLOW"] = close.ewm(
-        span=EMA_SLOW,
+        span=ema_slow,
         adjust=False
     ).mean()
 
@@ -64,13 +70,13 @@ def generate_signals(df):
     buy_condition = (
         (df["Prev_EMA_FAST"] <= df["Prev_EMA_SLOW"])
         & (df["EMA_FAST"] > df["EMA_SLOW"])
-        & (df["RSI"] > RSI_BUY)
+        & (df["RSI"] > rsi_buy)
     )
 
     sell_condition = (
         (df["Prev_EMA_FAST"] >= df["Prev_EMA_SLOW"])
         & (df["EMA_FAST"] < df["EMA_SLOW"])
-        & (df["RSI"] < RSI_SELL)
+        & (df["RSI"] < rsi_sell)
     )
 
     df.loc[buy_condition, "Signal"] = 1

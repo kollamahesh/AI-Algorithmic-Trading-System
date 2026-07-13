@@ -4,14 +4,17 @@ equity_curve.py
 Creates account equity curve.
 """
 
-import config
+from config.settings import CAPITAL
 
 
 def build_equity_curve(profits):
+    """
+    Builds the account equity after each trade.
+    """
 
     equity = []
 
-    capital = config.INITIAL_CAPITAL
+    capital = CAPITAL
 
     equity.append(capital)
 

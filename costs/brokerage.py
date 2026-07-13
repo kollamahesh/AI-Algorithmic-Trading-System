@@ -1,21 +1,19 @@
 """
-brokerage.py
+costs/brokerage.py
 
-Simple brokerage calculator for backtesting.
+Brokerage Calculation
 """
 
-import config
+from config.settings import BROKERAGE_PERCENT
 
 
 def calculate_brokerage(quantity, buy_price, sell_price):
+    """
+    Calculates total brokerage for a round-trip trade.
+    """
 
-    turnover = (
-        buy_price + sell_price
-    ) * quantity
+    turnover = (buy_price + sell_price) * quantity
 
-    brokerage = (
-        turnover *
-        config.BROKERAGE_PERCENT / 100
-    )
+    brokerage = turnover * (BROKERAGE_PERCENT / 100)
 
-    return round(brokerage, 2)
+    return brokerage

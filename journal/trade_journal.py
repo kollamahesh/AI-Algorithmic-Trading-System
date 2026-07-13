@@ -6,13 +6,13 @@ Trade Journal Module
 
 import datetime
 import pandas as pd
-import config
 
 # Stores all completed trades
 trade_history = []
 
 
 def add_trade(
+    symbol,
     entry_price,
     exit_price,
     quantity,
@@ -31,7 +31,7 @@ def add_trade(
 
         "Date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
 
-        "Symbol": config.SYMBOL,
+        "Symbol": symbol,
 
         "Entry Price": round(entry_price, 2),
 

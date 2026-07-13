@@ -1,56 +1,61 @@
 {
-    "capital": 3176.1999999999825,
-    "open_positions": [
+    "capital": 100039.20000000001,
+    "open_positions": [],
+    "closed_positions": [
         {
             "Symbol": "ADANIENT.NS",
-            "Entry": 3157.3,
-            "Stop": 3024.18,
-            "Target": 3423.54,
+            "Entry": 3189.8,
+            "Stop": 3052.44,
+            "Target": 3464.52,
             "Quantity": 7,
-            "Investment": 22101.100000000002,
-            "Entry Time": "2026-07-11 09:48:23.338099",
-            "Status": "OPEN"
+            "Investment": 22328.6,
+            "Entry Time": "2026-07-13 17:26:37.846558",
+            "Status": "CLOSED"
         },
         {
-            "Symbol": "ICICIBANK.NS",
-            "Entry": 1401.2,
-            "Stop": 1363.14,
-            "Target": 1477.31,
-            "Quantity": 26,
-            "Investment": 36431.200000000004,
-            "Entry Time": "2026-07-11 22:52:12.046094",
-            "Status": "OPEN"
+            "Symbol": "ADANIENT.NS",
+            "Entry": 3174.7,
+            "Stop": 3037.34,
+            "Target": 3449.42,
+            "Quantity": 7,
+            "Investment": 22222.9,
+            "Entry Time": "2026-07-13 20:29:15",
+            "Status": "CLOSED",
+            "Exit": 3174.7,
+            "Exit Time": "2026-07-13 20:29:22",
+            "Sale Value": 22222.9,
+            "Profit": -0.0,
+            "Return %": -0.0
         },
         {
-            "Symbol": "APOLLOHOSP.NS",
-            "Entry": 8841.0,
-            "Stop": 8623.57,
-            "Target": 9275.85,
-            "Quantity": 4,
-            "Investment": 35364.0,
-            "Entry Time": "2026-07-11 23:32:32",
-            "Status": "OPEN"
+            "Symbol": "ADANIENT.NS",
+            "Entry": 3174.7,
+            "Stop": 3037.34,
+            "Target": 3449.42,
+            "Quantity": 7,
+            "Investment": 22222.9,
+            "Entry Time": "2026-07-13 20:43:26",
+            "Status": "CLOSED",
+            "Exit": 3177.5,
+            "Exit Time": "2026-07-13 21:24:30",
+            "Sale Value": 22242.5,
+            "Profit": 19.6,
+            "Return %": 0.09
         },
         {
-            "Symbol": "BAJFINANCE.NS",
-            "Entry": 1020.5,
-            "Stop": 983.56,
-            "Target": 1094.39,
-            "Quantity": 27,
-            "Investment": 27553.5,
-            "Entry Time": "2026-07-11 23:33:45",
-            "Status": "OPEN"
-        },
-        {
-            "Symbol": "MARUTI.NS",
-            "Entry": 13854.0,
-            "Stop": 13348.17,
-            "Target": 14865.66,
-            "Quantity": 1,
-            "Investment": 13854.0,
-            "Entry Time": "2026-07-11 23:35:00",
-            "Status": "OPEN"
+            "Symbol": "ADANIENT.NS",
+            "Entry": 3174.7,
+            "Stop": 3037.34,
+            "Target": 3449.42,
+            "Quantity": 7,
+            "Investment": 22222.9,
+            "Entry Time": "2026-07-13 21:24:46",
+            "Status": "CLOSED",
+            "Exit": 3177.5,
+            "Exit Time": "2026-07-13 21:24:54",
+            "Sale Value": 22242.5,
+            "Profit": 19.6,
+            "Return %": 0.09
         }
-    ],
-    "closed_positions": []
+    ]
 }

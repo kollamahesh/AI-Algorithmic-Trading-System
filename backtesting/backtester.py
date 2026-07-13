@@ -1,4 +1,4 @@
-import config
+from config.settings import *
 
 from risk.risk_manager import calculate_position_size
 
@@ -20,7 +20,7 @@ from journal.trade_journal import add_trade
 
 def run_backtest(df, verbose=True):
 
-    capital = config.INITIAL_CAPITAL
+    capital = CAPITAL
 
     position = False
 
@@ -31,7 +31,7 @@ def run_backtest(df, verbose=True):
     target_price = 0
 
     profits = []
-
+    equity_curve = [capital]
     for _, row in df.iterrows():
 
         signal = int(row["Signal"])
@@ -58,8 +58,8 @@ def run_backtest(df, verbose=True):
             )
 
             quantity = calculate_position_size(
-                capital=capital,
-                risk_percent=config.RISK_PERCENT,
+                capital=CAPITAL,
+                risk_percent= RISK_PERCENT,
                 entry_price=entry_price,
                 stop_loss_price=stop_loss_price
             )
@@ -107,10 +107,13 @@ def run_backtest(df, verbose=True):
             net_profit = gross_profit - brokerage
 
             capital += net_profit
+            
+            equity_curve.append(capital)
 
             profits.append(net_profit)
 
             add_trade(
+                symbol="RELIANCE.NS",
                 entry_price=entry_price,
                 exit_price=exit_price,
                 quantity=quantity,
@@ -119,7 +122,7 @@ def run_backtest(df, verbose=True):
                 gross_profit=gross_profit,
                 brokerage=brokerage,
                 net_profit=net_profit,
-                exit_reason="Stop Loss"
+                exit_reason="..."
             )
 
             if verbose:
@@ -163,10 +166,13 @@ def run_backtest(df, verbose=True):
             net_profit = gross_profit - brokerage
 
             capital += net_profit
+            
+            equity_curve.append(capital)
 
             profits.append(net_profit)
 
             add_trade(
+                symbol="RELIANCE.NS",
                 entry_price=entry_price,
                 exit_price=exit_price,
                 quantity=quantity,
@@ -175,7 +181,7 @@ def run_backtest(df, verbose=True):
                 gross_profit=gross_profit,
                 brokerage=brokerage,
                 net_profit=net_profit,
-                exit_reason="Target"
+                exit_reason="..."
             )
 
             if verbose:
@@ -216,10 +222,13 @@ def run_backtest(df, verbose=True):
             net_profit = gross_profit - brokerage
 
             capital += net_profit
+            
+            equity_curve.append(capital)
 
             profits.append(net_profit)
 
             add_trade(
+                symbol="RELIANCE.NS",
                 entry_price=entry_price,
                 exit_price=exit_price,
                 quantity=quantity,
@@ -228,7 +237,7 @@ def run_backtest(df, verbose=True):
                 gross_profit=gross_profit,
                 brokerage=brokerage,
                 net_profit=net_profit,
-                exit_reason="Sell Signal"
+                exit_reason="..."
             )
 
             if verbose:
@@ -270,6 +279,8 @@ def run_backtest(df, verbose=True):
     results = {
 
         "profits": profits,
+        
+        "equity_curve": equity_curve,
 
         "total_profit": total_profit,
 
@@ -284,5 +295,15 @@ def run_backtest(df, verbose=True):
         "win_rate": round(win_rate, 2)
 
     }
+    
+    from analytics.equity_curve import build_equity_curve
 
+    results["equity_curve"] = build_equity_curve(results["profits"])
+    from backtesting.metrics import calculate_metrics
+    from backtesting.report import print_report
+
+    metrics = calculate_metrics(results)
+
+    if verbose:
+        print_report(results)
     return results

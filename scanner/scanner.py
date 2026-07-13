@@ -18,6 +18,32 @@ from risk.position_size import calculate_position_size
 from config.settings import *
 
 
+# ==========================================================
+# PREPARE SINGLE STOCK
+# ==========================================================
+
+def scan_stock(symbol):
+    """
+    Downloads historical data and prepares indicators
+    for a single stock.
+
+    Used by:
+        - Backtesting
+        - Strategy Optimizer
+        - Future AI Models
+    """
+
+    df = get_historical_data(symbol)
+
+    if len(df) < 60:
+        raise Exception(f"Not enough historical data for {symbol}")
+
+    df = generate_signals(df)
+
+    df = add_atr(df)
+
+    return df
+
 def scan_market():
 
     symbols = load_watchlist()
