@@ -1,6 +1,17 @@
 {
-    "capital": 100039.20000000001,
-    "open_positions": [],
+    "capital": 77761.70000000001,
+    "open_positions": [
+        {
+            "Symbol": "ADANIENT.NS",
+            "Entry": 3182.5,
+            "Stop": 3050.36,
+            "Target": 3446.77,
+            "Quantity": 7,
+            "Investment": 22277.5,
+            "Entry Time": "2026-07-14 15:20:48",
+            "Status": "OPEN"
+        }
+    ],
     "closed_positions": [
         {
             "Symbol": "ADANIENT.NS",

@@ -2,12 +2,16 @@ from kite_api.client import kite
 
 
 def get_live_price(symbol):
-    """
-    Returns latest live market price.
-    """
 
-    # Convert RELIANCE.NS -> NSE:RELIANCE
-    kite_symbol = "NSE:" + symbol.replace(".NS", "")
+    # Convert Yahoo format -> Kite format
+
+    if symbol.endswith(".NS"):
+
+        kite_symbol = "NSE:" + symbol.replace(".NS", "")
+
+    else:
+
+        kite_symbol = symbol
 
     data = kite.ltp([kite_symbol])
 

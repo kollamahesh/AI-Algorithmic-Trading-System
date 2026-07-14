@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 from scanner.scanner import scan_market
-from paper_trading.execution import execute_paper_trade
+from broker.broker import Broker
 
 st.set_page_config(
     page_title="Scanner",
@@ -14,9 +14,15 @@ st.title("🔍 Market Scanner")
 
 st.markdown("---")
 
-# ------------------------------------
-# Initialize Session State
-# ------------------------------------
+# ==========================================
+# Initialize Broker
+# ==========================================
+
+broker = Broker()
+
+# ==========================================
+# Session State
+# ==========================================
 
 if "scan_results" not in st.session_state:
     st.session_state.scan_results = None
@@ -24,9 +30,9 @@ if "scan_results" not in st.session_state:
 if "best_stock" not in st.session_state:
     st.session_state.best_stock = None
 
-# ------------------------------------
+# ==========================================
 # Run Scanner
-# ------------------------------------
+# ==========================================
 
 if st.button("▶ Run Scanner", use_container_width=True):
 
@@ -39,9 +45,9 @@ if st.button("▶ Run Scanner", use_container_width=True):
 
     st.success("Scan Complete!")
 
-# ------------------------------------
+# ==========================================
 # Display Results
-# ------------------------------------
+# ==========================================
 
 if st.session_state.scan_results is not None:
 
@@ -59,11 +65,11 @@ if st.session_state.scan_results is not None:
     col3.metric("Target", f"₹{best_stock['Target']:.2f}")
     col4.metric("Stop", f"₹{best_stock['Stop']:.2f}")
 
-    st.markdown("### Paper Trading")
+    st.markdown("### Trading")
 
     if st.button("🛒 Buy Best Trade"):
 
-        success, message = execute_paper_trade(best_stock)
+        success, message = broker.buy(best_stock)
 
         if success:
             st.success(message)

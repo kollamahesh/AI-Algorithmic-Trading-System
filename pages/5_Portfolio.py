@@ -5,7 +5,7 @@ from streamlit_autorefresh import st_autorefresh
 
 from kite_api.live_price import get_live_price
 
-from paper_trading.monitor import monitor_positions
+from trade_manager.manager import TradeManager
 from paper_trading.execution import close_paper_trade
 
 from paper_trading.portfolio import (
@@ -35,7 +35,9 @@ st.title("💼 Portfolio")
 # Auto Monitor
 # ==========================================
 
-messages = monitor_positions()
+manager = TradeManager()
+
+messages = manager.monitor()
 
 for message in messages:
     st.success(message)

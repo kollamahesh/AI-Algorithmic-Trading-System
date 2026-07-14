@@ -47,10 +47,22 @@ BROKERAGE_PERCENT = 0.03
 # Trading
 # ======================================
 
+# True = Paper Trading
+# False = Live Trading
+
 PAPER_TRADING = True
 
 BROKER = "ZERODHA"
 
+# Order Product
+# MIS = Intraday
+# CNC = Delivery
+
+ORDER_PRODUCT = "MIS"
+
+# Order Variety
+
+ORDER_VARIETY = "regular"
 # ======================================
 # Strategy
 # ======================================
